@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Neelkanth Sales Agency — Private Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Cinzel:wght@400;600&family=Raleway:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --gold: #c9a84c;
+    --gold-light: #f0d080;
+    --gold-dim: #a08040;
+    --gold-dark: #7a6030;
+    --gold-deeper: #4a3810;
+    --bg-deepest: #0d0b06;
+    --bg-deep: #1a1208;
+    --bg-mid: #221708;
+    --bg-card: #1e1509;
+    --border: #3a2c10;
+    --border-dim: #2a1e08;
+    --text-main: #f0e6cc;
+    --text-gold: #d4b870;
+    --text-muted: #a08040;
+    --text-dim: #7a6030;
+    --green: #4a9a40;
+    --green-bg: #0a2010;
+    --green-border: #1a4020;
+    --red: #c04040;
+    --red-bg: #2a0a0a;
+    --red-border: #4a1a1a;
+  }
+
+  html, body { height: 100%; font-family: 'Raleway', sans-serif; background: var(--bg-deep); color: var(--text-main); }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg-deepest); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  .gold-line { width: 100%; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), var(--gold-light), var(--gold), transparent); flex-shrink: 0; }
+
+  /* ══════════════════ LOGIN PAGE ══════════════════ */
+  #login-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(ellipse at center, #221708 0%, #0d0b06 70%);
+    position: relative;
+    overflow: hidden;
+  }
+  #login-page::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(0deg, transparent, transparent 60px, rgba(201,168,76,0.03) 60px, rgba(201,168,76,0.03) 61px),
+                      repeating-linear-gradient(90deg, transparent, transparent 60px, rgba(201,168,76,0.03) 60px, rgba(201,168,76,0.03) 61px);
+  }
+
+  .login-box {
+    position: relative;
+    width: 420px;
+    background: var(--bg-deepest);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 0 60px rgba(201,168,76,0.08), 0 0 120px rgba(0,0,0,0.8);
+  }
+  .login-top { padding: 36px 36px 24px; text-align: center; border-bottom: 1px solid var(--border-dim); }
+  .login-ornament { font-family: 'Cormorant Garamond', serif; font-size: 12px; color: var(--gold); letter-spacing: 8px; text-transform: uppercase; margin-bottom: 10px; }
+  .login-title { font-family: 'Cinzel', serif; font-size: 22px; font-weight: 600; color: var(--gold-light); letter-spacing: 3px; margin-bottom: 4px; }
+  .login-sub { font-size: 11px; color: var(--text-dim); letter-spacing: 4px; text-transform: uppercase; font-family: 'Cormorant Garamond', serif; }
+
+  .login-form { padding: 28px 36px 32px; }
+  .form-group { margin-bottom: 18px; }
+  .form-label { display: block; font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 3px; color: var(--text-dim); text-transform: uppercase; margin-bottom: 8px; }
+  .form-input {
+    width: 100%; padding: 11px 14px;
+    background: var(--bg-mid); border: 1px solid var(--border);
+    border-radius: 3px; color: var(--text-main); font-family: 'Raleway', sans-serif;
+    font-size: 14px; transition: border-color 0.2s;
+    outline: none;
+  }
+  .form-input:focus { border-color: var(--gold); }
+  .form-input::placeholder { color: var(--text-dim); }
+
+  .login-btn {
+    width: 100%; padding: 13px;
+    background: linear-gradient(135deg, #3a2c10, #221708);
+    border: 1px solid var(--gold);
+    border-radius: 3px; color: var(--gold-light);
+    font-family: 'Cinzel', serif; font-size: 12px;
+    letter-spacing: 4px; text-transform: uppercase;
+    cursor: pointer; transition: all 0.2s; margin-top: 8px;
+  }
+  .login-btn:hover { background: linear-gradient(135deg, #4a3c18, #2a1f0a); box-shadow: 0 0 20px rgba(201,168,76,0.2); }
+  .login-error { color: var(--red); font-size: 12px; text-align: center; margin-top: 12px; display: none; font-style: italic; }
+  .login-hint { text-align: center; margin-top: 16px; font-size: 11px; color: var(--text-dim); }
+
+  /* ══════════════════ MAIN APP ══════════════════ */
+  #app { display: none; flex-direction: column; height: 100vh; }
+
+  /* HEADER */
+  .app-header {
+    background: var(--bg-deepest);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 28px;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .header-brand { text-align: center; flex: 1; }
+  .header-ornament { font-family: 'Cormorant Garamond', serif; font-size: 11px; color: var(--gold); letter-spacing: 6px; }
+  .header-title { font-family: 'Cinzel', serif; font-size: 20px; color: var(--gold-light); letter-spacing: 4px; }
+  .header-right { display: flex; align-items: center; gap: 12px; }
+  .header-user { font-size: 11px; color: var(--text-dim); letter-spacing: 1px; }
+  .logout-btn {
+    background: none; border: 1px solid var(--border);
+    border-radius: 3px; color: var(--text-dim);
+    padding: 5px 12px; font-size: 10px; letter-spacing: 2px;
+    font-family: 'Cinzel', serif; cursor: pointer; transition: all 0.2s;
+  }
+  .logout-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* NAV */
+  .app-nav {
+    background: var(--bg-deepest);
+    border-bottom: 1px solid var(--border);
+    display: flex; flex-shrink: 0;
+    overflow-x: auto;
+  }
+  .nav-item {
+    padding: 11px 22px; font-family: 'Cinzel', serif;
+    font-size: 10px; letter-spacing: 2px; color: var(--text-dim);
+    cursor: pointer; border-right: 1px solid var(--border-dim);
+    white-space: nowrap; transition: all 0.2s; display: flex; align-items: center; gap: 7px;
+    border-bottom: 2px solid transparent;
+  }
+  .nav-item:first-child { border-left: 1px solid var(--border-dim); }
+  .nav-item.active { color: var(--gold-light); border-bottom-color: var(--gold); background: var(--bg-mid); }
+  .nav-item:hover:not(.active) { color: var(--gold); background: rgba(201,168,76,0.04); }
+
+  /* CONTENT AREA */
+  .app-body { flex: 1; overflow-y: auto; background: var(--bg-deep); }
+  .page { display: none; padding: 28px; }
+  .page.active { display: block; }
+
+  /* PAGE HEADERS */
+  .page-title-row { margin-bottom: 24px; display: flex; justify-content: space-between; align-items: flex-end; }
+  .page-title { font-family: 'Cinzel', serif; font-size: 18px; color: var(--gold-light); letter-spacing: 2px; }
+  .page-subtitle { font-family: 'Cormorant Garamond', serif; font-size: 13px; color: var(--text-dim); font-style: italic; margin-top: 2px; }
+  .page-action-btn {
+    background: var(--bg-mid); border: 1px solid var(--gold);
+    border-radius: 3px; color: var(--gold); padding: 8px 18px;
+    font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 2px;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .page-action-btn:hover { background: var(--border); }
+
+  /* METRICS */
+  .metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 22px; }
+  .metric-card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 4px; padding: 18px 16px; position: relative; overflow: hidden;
+  }
+  .metric-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+  .metric-label { font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 2px; color: var(--text-dim); text-transform: uppercase; margin-bottom: 10px; }
+  .metric-value { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 600; color: var(--gold-light); line-height: 1; }
+  .metric-sub { font-size: 11px; color: var(--text-muted); margin-top: 5px; }
+  .metric-icon { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); font-size: 30px; color: var(--border); }
+
+  /* PANELS */
+  .panel { background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; margin-bottom: 20px; }
+  .panel-header { padding: 13px 18px; border-bottom: 1px solid var(--border-dim); background: var(--bg-deepest); display: flex; justify-content: space-between; align-items: center; }
+  .panel-title { font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 2px; color: var(--gold); }
+  .panel-link { font-size: 10px; color: var(--text-dim); cursor: pointer; letter-spacing: 1px; }
+  .panel-link:hover { color: var(--gold); }
+
+  /* TABLES */
+  .data-table { width: 100%; border-collapse: collapse; }
+  .data-table th { padding: 10px 16px; font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 2px; color: var(--text-dim); text-transform: uppercase; border-bottom: 1px solid var(--border); text-align: left; background: var(--bg-deepest); }
+  .data-table td { padding: 12px 16px; font-size: 13px; border-bottom: 1px solid var(--border-dim); color: var(--text-main); }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table tr:hover td { background: rgba(201,168,76,0.04); }
+  .data-table .name-cell { font-family: 'Cormorant Garamond', serif; font-size: 15px; color: var(--text-gold); }
+  .data-table .amount-cell { font-family: 'Cormorant Garamond', serif; font-size: 16px; color: var(--gold-light); font-weight: 600; }
+
+  /* BADGES */
+  .badge { font-size: 9px; letter-spacing: 1px; padding: 3px 10px; border-radius: 2px; text-transform: uppercase; font-family: 'Cinzel', serif; display: inline-block; }
+  .badge-paid { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+  .badge-pending { background: #2a1a00; color: var(--gold); border: 1px solid var(--gold-deeper); }
+  .badge-overdue { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
+  .badge-low { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
+  .badge-ok { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+
+  /* TWO COL */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+
+  /* STOCK BAR */
+  .stock-bar-wrap { width: 80px; height: 4px; background: var(--border-dim); border-radius: 2px; display: inline-block; vertical-align: middle; }
+  .stock-bar { height: 4px; border-radius: 2px; background: linear-gradient(90deg, var(--gold), var(--gold-light)); }
+  .stock-bar.low { background: var(--red); }
+
+  /* FORM FIELDS INSIDE APP */
+  .app-form { padding: 20px; }
+  .app-form .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  .app-form .form-row.full { grid-template-columns: 1fr; }
+  .app-form label { display: block; font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 2px; color: var(--text-dim); margin-bottom: 6px; }
+  .app-form input, .app-form select, .app-form textarea {
+    width: 100%; padding: 9px 12px; background: var(--bg-mid);
+    border: 1px solid var(--border); border-radius: 3px; color: var(--text-main);
+    font-family: 'Raleway', sans-serif; font-size: 13px; outline: none; transition: border-color 0.2s;
+  }
+  .app-form input:focus, .app-form select:focus, .app-form textarea:focus { border-color: var(--gold); }
+  .app-form select option { background: var(--bg-mid); }
+  .submit-btn {
+    background: linear-gradient(135deg, #3a2c10, #221708); border: 1px solid var(--gold);
+    border-radius: 3px; color: var(--gold-light); padding: 10px 28px;
+    font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 3px;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .submit-btn:hover { background: linear-gradient(135deg, #4a3c18, #2a1f0a); }
+
+  /* REPORTS CHART */
+  .chart-bar-group { display: flex; align-items: flex-end; gap: 8px; height: 140px; padding: 10px 18px 0; }
+  .chart-bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .chart-bar { width: 100%; background: linear-gradient(180deg, var(--gold-light), var(--gold)); border-radius: 2px 2px 0 0; transition: height 0.5s ease; }
+  .chart-label { font-size: 9px; color: var(--text-dim); letter-spacing: 1px; font-family: 'Cinzel', serif; }
+  .chart-value { font-size: 10px; color: var(--gold); font-family: 'Cormorant Garamond', serif; }
+  .chart-x-axis { border-top: 1px solid var(--border); margin: 0 18px; }
+
+  /* DOCS */
+  .doc-row { display: flex; align-items: center; gap: 14px; padding: 12px 18px; border-bottom: 1px solid var(--border-dim); }
+  .doc-row:last-child { border-bottom: none; }
+  .doc-icon { font-size: 22px; color: var(--gold); width: 30px; text-align: center; flex-shrink: 0; }
+  .doc-name { font-family: 'Cormorant Garamond', serif; font-size: 15px; color: var(--text-gold); }
+  .doc-meta { font-size: 10px; color: var(--text-dim); margin-top: 2px; letter-spacing: 1px; }
+  .doc-dl { margin-left: auto; font-size: 16px; color: var(--text-dim); cursor: pointer; }
+  .doc-dl:hover { color: var(--gold); }
+
+  /* PAYROLL */
+  .payroll-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 20px; }
+
+  /* FOOTER */
+  .app-footer { background: var(--bg-deepest); border-top: 1px solid var(--border); padding: 10px 28px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
+  .footer-text { font-family: 'Cinzel', serif; font-size: 9px; color: var(--text-dim); letter-spacing: 2px; }
+
+  /* MODAL */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 100; align-items: center; justify-content: center; }
+  .modal-overlay.open { display: flex; }
+  .modal-box { background: var(--bg-deepest); border: 1px solid var(--border); border-radius: 4px; width: 480px; max-width: 95vw; overflow: hidden; }
+  .modal-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+  .modal-title { font-family: 'Cinzel', serif; font-size: 13px; color: var(--gold); letter-spacing: 2px; }
+  .modal-close { background: none; border: none; color: var(--text-dim); font-size: 18px; cursor: pointer; }
+  .modal-close:hover { color: var(--gold); }
+
+  .success-toast { position: fixed; bottom: 30px; right: 30px; background: var(--green-bg); border: 1px solid var(--green-border); border-radius: 4px; padding: 12px 20px; color: var(--green); font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 2px; z-index: 200; display: none; }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+    .two-col, .three-col { grid-template-columns: 1fr; }
+    .app-form .form-row { grid-template-columns: 1fr; }
+    .header-title { font-size: 14px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════ LOGIN PAGE ══════════ -->
+<div id="login-page">
+  <div class="login-box">
+    <div class="gold-line"></div>
+    <div class="login-top">
+      <div class="login-ornament">✦ &nbsp; Private Portal &nbsp; ✦</div>
+      <div class="login-title">NEELKANTH</div>
+      <div class="login-title" style="font-size:14px; letter-spacing:6px; margin-top:2px;">SALES AGENCY</div>
+      <div class="login-sub" style="margin-top:8px;">Authorised Access Only</div>
+    </div>
+    <div class="login-form">
+      <div class="form-group">
+        <label class="form-label"><i class="fa fa-user" style="margin-right:5px;"></i>Username</label>
+        <input type="text" id="username" class="form-input" placeholder="Enter username" autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label class="form-label"><i class="fa fa-lock" style="margin-right:5px;"></i>Password</label>
+        <input type="password" id="password" class="form-input" placeholder="Enter password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+      <button class="login-btn" onclick="doLogin()">Enter Portal</button>
+      <div class="login-error" id="login-error">⚠ Invalid credentials. Please try again.</div>
+    </div>
+    <div class="gold-line"></div>
+    <div style="padding:10px; text-align:center;">
+      <div style="font-size:10px; color:var(--text-dim); letter-spacing:2px; font-family:'Cinzel',serif;">
+        Default: admin / neelkanth2024
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ MAIN APP ══════════ -->
+<div id="app">
+  <div class="app-header">
+    <div style="display:flex;align-items:center;gap:8px; color:var(--gold); font-size:18px;">✦</div>
+    <div class="header-brand">
+      <div class="header-ornament">Internal Business Portal</div>
+      <div class="header-title">NEELKANTH SALES AGENCY</div>
+    </div>
+    <div class="header-right">
+      <div class="header-user"><i class="fa fa-circle" style="color:var(--green);font-size:7px;"></i> &nbsp;<span id="logged-user">admin</span></div>
+      <button class="logout-btn" onclick="doLogout()"><i class="fa fa-sign-out-alt"></i> Logout</button>
+    </div>
+  </div>
+
+  <div class="gold-line"></div>
+
+  <div class="app-nav">
+    <div class="nav-item active" onclick="showPage('dashboard',this)"><i class="fa fa-th-large"></i> Dashboard</div>
+    <div class="nav-item" onclick="showPage('invoices',this)"><i class="fa fa-file-invoice"></i> Invoices</div>
+    <div class="nav-item" onclick="showPage('inventory',this)"><i class="fa fa-boxes"></i> Inventory</div>
+    <div class="nav-item" onclick="showPage('reports',this)"><i class="fa fa-chart-bar"></i> Reports</div>
+    <div class="nav-item" onclick="showPage('documents',this)"><i class="fa fa-folder-open"></i> Documents</div>
+    <div class="nav-item" onclick="showPage('payroll',this)"><i class="fa fa-users"></i> Payroll</div>
+    <div class="nav-item" onclick="showPage('clients',this)"><i class="fa fa-handshake"></i> Clients</div>
+    <div class="nav-item" onclick="showPage('settings',this)"><i class="fa fa-cog"></i> Settings</div>
+  </div>
+
+  <div class="app-body">
+
+    <!-- ── DASHBOARD ── -->
+    <div id="page-dashboard" class="page active">
+      <div class="page-title-row">
+        <div>
+          <div class="page-title">Dashboard Overview</div>
+          <div class="page-subtitle">Financial Year 2025–26 &nbsp;·&nbsp; May 2026</div>
+        </div>
+        <button class="page-action-btn" onclick="showToast('Data refreshed')"><i class="fa fa-sync"></i> &nbsp;Refresh</button>
+      </div>
+
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-label">Total Revenue</div>
+          <div class="metric-value">₹18.4L</div>
+          <div class="metric-sub" style="color:var(--green)">↑ 12% this month</div>
+          <i class="fa fa-chart-line metric-icon"></i>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Pending Invoices</div>
+          <div class="metric-value">7</div>
+          <div class="metric-sub">₹2,34,000 outstanding</div>
+          <i class="fa fa-file-invoice metric-icon"></i>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Inventory Items</div>
+          <div class="metric-value">142</div>
+          <div class="metric-sub" style="color:var(--red)">4 low stock alerts</div>
+          <i class="fa fa-boxes metric-icon"></i>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Active Clients</div>
+          <div class="metric-value">31</div>
+          <div class="metric-sub" style="color:var(--green)">3 new this quarter</div>
+          <i class="fa fa-users metric-icon"></i>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="panel">
+          <div class="panel-header"><span class="panel-title">Recent Invoices</span><span class="panel-link" onclick="showPage('invoices',document.querySelectorAll('.nav-item')[1])">View All →</span></div>
+          <table class="data-table">
+            <thead><tr><th>Client</th><th>Amount</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td class="name-cell">Sharma Traders</td><td class="amount-cell">₹42,500</td><td><span class="badge badge-paid">Paid</span></td></tr>
+              <tr><td class="name-cell">Mehta & Sons</td><td class="amount-cell">₹1,18,000</td><td><span class="badge badge-pending">Pending</span></td></tr>
+              <tr><td class="name-cell">Agarwal Dist.</td><td class="amount-cell">₹67,200</td><td><span class="badge badge-overdue">Overdue</span></td></tr>
+              <tr><td class="name-cell">Gupta Enterprises</td><td class="amount-cell">₹29,800</td><td><span class="badge badge-paid">Paid</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="panel">
+          <div class="panel-header"><span class="panel-title">Monthly Revenue</span><span class="panel-link">FY 2025–26</span></div>
+          <div class="chart-bar-group">
+            <div class="chart-bar-wrap"><div class="chart-value">9.2L</div><div class="chart-bar" style="height:66px"></div><div class="chart-label">Dec</div></div>
+            <div class="chart-bar-wrap"><div class="chart-value">11L</div><div class="chart-bar" style="height:79px"></div><div class="chart-label">Jan</div></div>
+            <div class="chart-bar-wrap"><div class="chart-value">8.5L</div><div class="chart-bar" style="height:61px"></div><div class="chart-label">Feb</div></div>
+            <div class="chart-bar-wrap"><div class="chart-value">13L</div><div class="chart-bar" style="height:93px"></div><div class="chart-label">Mar</div></div>
+            <div class="chart-bar-wrap"><div class="chart-value">15.8L</div><div class="chart-bar" style="height:113px"></div><div class="chart-label">Apr</div></div>
+            <div class="chart-bar-wrap"><div class="chart-value">18.4L</div><div class="chart-bar" style="height:132px; background:linear-gradient(180deg,var(--gold-light),var(--gold));"></div><div class="chart-label">May</div></div>
+          </div>
+          <div class="chart-x-axis"></div>
+          <div style="padding:10px 18px; font-size:11px; color:var(--text-dim); font-family:'Cormorant Garamond',serif; font-style:italic;">Highest month recorded: May 2026</div>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="panel">
+          <div class="panel-header"><span class="panel-title">Low Stock Alerts</span><span class="panel-link" onclick="showPage('inventory',document.querySelectorAll('.nav-item')[2])">Manage →</span></div>
+          <table class="data-table">
+            <thead><tr><th>Product</th><th>Stock</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td class="name-cell">Product C (SKU-003)</td><td>12 units</td><td><span class="badge badge-low">Low</span></td></tr>
+              <tr><td class="name-cell">Product E (SKU-005)</td><td>8 units</td><td><span class="badge badge-low">Critical</span></td></tr>
+              <tr><td class="name-cell">Product G (SKU-007)</td><td>18 units</td><td><span class="badge badge-low">Low</span></td></tr>
+              <tr><td class="name-cell">Product J (SKU-010)</td><td>5 units</td><td><span class="badge badge-low">Critical</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="panel">
+          <div class="panel-header"><span class="panel-title">Quick Actions</span></div>
+          <div style="padding:16px; display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+            <button class="submit-btn" style="width:100%" onclick="showPage('invoices',document.querySelectorAll('.nav-item')[1])"><i class="fa fa-plus"></i> &nbsp;New Invoice</button>
+            <button class="submit-btn" style="width:100%" onclick="showPage('documents',document.querySelectorAll('.nav-item')[4])"><i class="fa fa-upload"></i> &nbsp;Upload File</button>
+            <button class="submit-btn" style="width:100%" onclick="showPage('reports',document.querySelectorAll('.nav-item')[3])"><i class="fa fa-chart-bar"></i> &nbsp;View Reports</button>
+            <button class="submit-btn" style="width:100%" onclick="showPage('clients',document.querySelectorAll('.nav-item')[6])"><i class="fa fa-user-plus"></i> &nbsp;Add Client</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── INVOICES ── -->
+    <div id="page-invoices" class="page">
+      <div class="page-title-row">
+        <div><div class="page-title">Invoices</div><div class="page-subtitle">All billing records and payment status</div></div>
+        <button class="page-action-btn" onclick="openModal('modal-invoice')"><i class="fa fa-plus"></i> &nbsp;New Invoice</button>
+      </div>
+
+      <div class="metrics-grid" style="grid-template-columns:repeat(4,1fr)">
+        <div class="metric-card"><div class="metric-label">Total Invoiced</div><div class="metric-value">₹48.2L</div><div class="metric-sub">This financial year</div></div>
+        <div class="metric-card"><div class="metric-label">Collected</div><div class="metric-value">₹45.9L</div><div class="metric-sub" style="color:var(--green)">95.2% collection rate</div></div>
+        <div class="metric-card"><div class="metric-label">Outstanding</div><div class="metric-value">₹2.3L</div><div class="metric-sub" style="color:var(--gold)">7 invoices pending</div></div>
+        <div class="metric-card"><div class="metric-label">Overdue</div><div class="metric-value">₹67,200</div><div class="metric-sub" style="color:var(--red)">1 invoice overdue</div></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header"><span class="panel-title">All Invoices</span><span class="panel-link">May 2026</span></div>
+        <table class="data-table">
+          <thead><tr><th>Invoice No.</th><th>Client</th><th>Date</th><th>Due Date</th><th>Amount</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody>
+            <tr><td>INV-2026-0041</td><td class="name-cell">Sharma Traders</td><td>01 May 2026</td><td>15 May 2026</td><td class="amount-cell">₹42,500</td><td><span class="badge badge-paid">Paid</span></td><td><a href="#" style="color:var(--gold);font-size:12px;" onclick="showToast('Invoice downloaded')">Download</a></td></tr>
+            <tr><td>INV-2026-0040</td><td class="name-cell">Mehta & Sons</td><td>28 Apr 2026</td><td>28 May 2026</td><td class="amount-cell">₹1,18,000</td><td><span class="badge badge-pending">Pending</span></td><td><a href="#" style="color:var(--gold);font-size:12px;" onclick="showToast('Reminder sent')">Send Reminder</a></td></tr>
+            <tr><td>INV-2026-0039</td><td class="name-cell">Agarwal Distributors</td><td>01 Apr 2026</td><td>01 May 2026</td><td class="amount-cell">₹67,200</td><td><span class="badge badge-overdue">Overdue</span></td><td><a href="#" style="color:var(--red);font-size:12px;" onclick="showToast('Follow-up sent')">Follow Up</a></td></tr>
+            <tr><td>INV-2026-0038</td><td class="name-cell">Gupta Enterprises</td><td>20 Apr 2026</td><td>20 May 2026</td><td class="amount-cell">₹29,800</td><td><span class="badge badge-paid">Paid</span></td><td><a href="#" style="color:var(--gold);font-size:12px;" onclick="showToast('Invoice downloaded')">Download</a></td></tr>
+            <tr><td>INV-2026-0037</td><td class="name-cell">Joshi & Brothers</td><td>18 Apr 2026</td><td>18 May 2026</td><td class="amount-cell">₹85,600</td><td><span class="badge badge-paid">Paid</span></td><td><a href="#" style="color:var(--gold);font-size:12px;" onclick="showToast('Invoice downloaded')">Download</a></td></tr>
+            <tr><td>INV-2026-0036</td><td class="name-cell">Patel Wholesale</td><td>15 Apr 2026</td><td>15 May 2026</td><td class="amount-cell">₹53,400</td><td><span class="badge badge-pending">Pending</span></td><td><a href="#" style="color:var(--gold);font-size:12px;" onclick="showToast('Reminder sent')">Send Reminder</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── INVENTORY ── -->
+    <div id="page-inventory" class="page">
+      <div class="page-title-row">
+        <div><div class="page-title">Inventory Management</div><div class="page-subtitle">Stock levels, SKUs and warehouse data</div></div>
+        <button class="page-action-btn" onclick="openModal('modal-stock')"><i class="fa fa-plus"></i> &nbsp;Add Product</button>
+      </div>
+
+      <div class="metrics-grid">
+        <div class="metric-card"><div class="metric-label">Total SKUs</div><div class="metric-value">142</div><div class="metric-sub">Across all categories</div></div>
+        <div class="metric-card"><div class="metric-label">Total Value</div><div class="metric-value">₹31.4L</div><div class="metric-sub">At purchase price</div></div>
+        <div class="metric-card"><div class="metric-label">Low Stock</div><div class="metric-value" style="color:var(--red)">4</div><div class="metric-sub" style="color:var(--red)">Need reorder</div></div>
+        <div class="metric-card"><div class="metric-label">Categories</div><div class="metric-value">8</div><div class="metric-sub">Product categories</div></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header"><span class="panel-title">Stock Register</span></div>
+        <table class="data-table">
+          <thead><tr><th>SKU</th><th>Product Name</th><th>Category</th><th>In Stock</th><th>Level</th><th>Unit Price</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>SKU-001</td><td class="name-cell">Product A</td><td>Category 1</td><td>240</td><td><div class="stock-bar-wrap"><div class="stock-bar" style="width:90%"></div></div></td><td>₹450</td><td><span class="badge badge-ok">In Stock</span></td></tr>
+            <tr><td>SKU-002</td><td class="name-cell">Product B</td><td>Category 2</td><td>88</td><td><div class="stock-bar-wrap"><div class="stock-bar" style="width:55%"></div></div></td><td>₹1,200</td><td><span class="badge badge-ok">In Stock</span></td></tr>
+            <tr><td>SKU-003</td><td class="name-cell">Product C</td><td>Category 1</td><td>12</td><td><div class="stock-bar-wrap"><div class="stock-bar low" style="width:12%"></div></div></td><td>₹890</td><td><span class="badge badge-low">Low</span></td></tr>
+            <tr><td>SKU-004</td><td class="name-cell">Product D</td><td>Category 3</td><td>175</td><td><div class="stock-bar-wrap"><div class="stock-bar" style="width:75%"></div></div></td><td>₹320</td><td><span class="badge badge-ok">In Stock</span></td></tr>
+            <tr><td>SKU-005</td><td class="name-cell">Product E</td><td>Category 2</td><td>8</td><td><div class="stock-bar-wrap"><div class="stock-bar low" style="width:8%"></div></div></td><td>₹2,100</td><td><span class="badge badge-low">Critical</span></td></tr>
+            <tr><td>SKU-006</td><td class="name-cell">Product F</td><td>Category 4</td><td>310</td><td><div class="stock-bar-wrap"><div class="stock-bar" style="width:95%"></div></div></td><td>₹180</td><td><span class="badge badge-ok">In Stock</span></td></tr>
+            <tr><td>SKU-007</td><td class="name-cell">Product G</td><td>Category 3</td><td>18</td><td><div class="stock-bar-wrap"><div class="stock-bar low" style="width:18%"></div></div></td><td>₹750</td><td><span class="badge badge-low">Low</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── REPORTS ── -->
+    <div id="page-reports" class="page">
+      <div class="page-title-row">
+        <div><div class="page-title">Financial Reports</div><div class="page-subtitle">Profit & Loss, Balance Sheet, GST Summaries</div></div>
+        <button class="page-action-btn" onclick="showToast('Report exported to PDF')"><i class="fa fa-download"></i> &nbsp;Export PDF</button>
+      </div>
+
+      <div class="three-col" style="margin-bottom:20px">
+        <div class="metric-card"><div class="metric-label">Gross Revenue</div><div class="metric-value">₹48.2L</div><div class="metric-sub" style="color:var(--green)">↑ 18% YoY</div></div>
+        <div class="metric-card"><div class="metric-label">Total Expenses</div><div class="metric-value">₹31.8L</div><div class="metric-sub">Operating costs</div></div>
+        <div class="metric-card"><div class="metric-label">Net Profit</div><div class="metric-value">₹16.4L</div><div class="metric-sub" style="color:var(--green)">34% profit margin</div></div>
+      </div>
+
+      <div class="two-col">
+        <div class="panel">
+          <div class="panel-header"><span class="panel-title">Monthly Revenue — FY 2025–26</span></div>
+          <div class="chart-bar-group" style="height:160px">
+            <div class="chart-bar-wrap"><div class="chart-value">12L</div><div class="chart-bar" style="height:62px"></div><div class="chart-label">Jun</div></div>
+            <div class="chart-bar-wrap"><div class="chart-value">10.5L</div><div class="chart-bar" style="height:54px"></div><div class="chart-label">Jul</div></div>
+            <div class="chart-bar-wrap"><div class="chart-value">14L</div><div class="chart-bar" style="height:72px"></div><div class="chart-label">Aug</div></div>
+            <div class="chart-bar-wrap"><div class="chart-value">11.2L</div><div class="chart-bar" style="height:58px"></div><div class="chart-label">Sep</div></div>
+            <div class="chart-bar-wrap"><div class="chart-value">16L</div><div class="chart-bar" style="height:83px"></div><div class="chart-label">Oct</div></div>
+            <div class="chart-bar-wrap"><div class="chart-value">14.8L</div><div class="chart-bar" style="height:76px"></div><div class="chart-label">Nov</div></div>
+            <div class="chart-bar-wrap"><div class="chart-value">9.2L</div><div class="chart-bar" style="height:47px"></div><div class="chart-label">Dec</div></div>
+            <div class="chart-bar-wrap"><div class="chart-value">11L</div><div class="chart-bar" style="height:57px"></div><div class="chart-label">Jan</div></div>
+            <div class="chart-bar-wrap"><div class="chart-value">8.5L</div><div class="chart-bar" style="height:44px"></div><div class="chart-label">Feb</div></div>
+            <div class="chart-bar-wrap"><div class="chart-value">13L</div><div class="chart-bar" style="height:67px"></div><div class="chart-label">Mar</div></div>
+            <div class="chart-bar-wrap"><div class="chart-value">15.8L</div><div class="chart-bar" style="height:81px"></div><div class="chart-label">Apr</div></div>
+            <div class="chart-bar-wrap"><div class="chart-value">18.4L</div><div class="chart-bar" style="height:100px; background:linear-gradient(180deg,var(--gold-light),var(--gold))"></div><div class="chart-label">May</div></div>
+          </div>
+          <div class="chart-x-axis"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-header"><span class="panel-title">GST Summary</span></div>
+          <table class="data-table">
+            <thead><tr><th>Period</th><th>Taxable</th><th>GST</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>Apr 2026</td><td>₹15,80,000</td><td class="amount-cell">₹2,84,400</td><td><span class="badge badge-paid">Filed</span></td></tr>
+              <tr><td>Mar 2026</td><td>₹13,00,000</td><td class="amount-cell">₹2,34,000</td><td><span class="badge badge-paid">Filed</span></td></tr>
+              <tr><td>Feb 2026</td><td>₹8,50,000</td><td class="amount-cell">₹1,53,000</td><td><span class="badge badge-paid">Filed</span></td></tr>
+              <tr><td>Jan 2026</td><td>₹11,00,000</td><td class="amount-cell">₹1,98,000</td><td><span class="badge badge-paid">Filed</span></td></tr>
+              <tr><td>Dec 2025</td><td>₹9,20,000</td><td class="amount-cell">₹1,65,600</td><td><span class="badge badge-paid">Filed</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header"><span class="panel-title">Profit & Loss — FY 2025–26</span></div>
+        <table class="data-table">
+          <thead><tr><th>Head</th><th>Q1</th><th>Q2</th><th>Q3</th><th>Q4 (Apr–May)</th><th>Total</th></tr></thead>
+          <tbody>
+            <tr><td class="name-cell">Revenue</td><td>₹11.2L</td><td>₹14.5L</td><td>₹10.3L</td><td>₹12.2L</td><td class="amount-cell">₹48.2L</td></tr>
+            <tr><td class="name-cell">Cost of Goods</td><td>₹6.8L</td><td>₹9.1L</td><td>₹6.4L</td><td>₹7.8L</td><td class="amount-cell">₹30.1L</td></tr>
+            <tr><td class="name-cell">Gross Profit</td><td>₹4.4L</td><td>₹5.4L</td><td>₹3.9L</td><td>₹4.4L</td><td class="amount-cell" style="color:var(--green)">₹18.1L</td></tr>
+            <tr><td class="name-cell">Operating Exp.</td><td>₹0.4L</td><td>₹0.6L</td><td>₹0.3L</td><td>₹0.4L</td><td class="amount-cell">₹1.7L</td></tr>
+            <tr><td class="name-cell" style="font-weight:600">Net Profit</td><td>₹4.0L</td><td>₹4.8L</td><td>₹3.6L</td><td>₹4.0L</td><td class="amount-cell" style="color:var(--green)">₹16.4L</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── DOCUMENTS ── -->
+    <div id="page-documents" class="page">
+      <div class="page-title-row">
+        <div><div class="page-title">Documents</div><div class="page-subtitle">Reports, filings and business records</div></div>
+        <button class="page-action-btn" onclick="openModal('modal-upload')"><i class="fa fa-upload"></i> &nbsp;Upload Document</button>
+      </div>
+
+      <div class="two-col">
+        <div class="panel">
+          <div class="panel-header"><span class="panel-title">Financial Reports</span></div>
+          <div class="doc-row"><div class="doc-icon"><i class="fa fa-file-excel"></i></div><div><div class="doc-name">P&L Report — April 2026</div><div class="doc-meta">Uploaded 2 days ago &nbsp;·&nbsp; Excel &nbsp;·&nbsp; 124 KB</div></div><div class="doc-dl" onclick="showToast('File downloaded')"><i class="fa fa-download"></i></div></div>
+          <div class="doc-row"><div class="doc-icon"><i class="fa fa-file-pdf"></i></div><div><div class="doc-name">Balance Sheet — FY 2025–26</div><div class="doc-meta">Uploaded 1 week ago &nbsp;·&nbsp; PDF &nbsp;·&nbsp; 280 KB</div></div><div class="doc-dl" onclick="showToast('File downloaded')"><i class="fa fa-download"></i></div></div>
+          <div class="doc-row"><div class="doc-icon"><i class="fa fa-file-pdf"></i></div><div><div class="doc-name">GST Filing Q4 Summary</div><div class="doc-meta">Uploaded 2 weeks ago &nbsp;·&nbsp; PDF &nbsp;·&nbsp; 98 KB</div></div><div class="doc-dl" onclick="showToast('File downloaded')"><i class="fa fa-download"></i></div></div>
+          <div class="doc-row"><div class="doc-icon"><i class="fa fa-file-excel"></i></div><div><div class="doc-name">Cash Flow Statement — Mar 2026</div><div class="doc-meta">Uploaded 3 weeks ago &nbsp;·&nbsp; Excel &nbsp;·&nbsp; 88 KB</div></div><div class="doc-dl" onclick="showToast('File downloaded')"><i class="fa fa-download"></i></div></div>
+        </div>
+        <div class="panel">
+          <div class="panel-header"><span class="panel-title">Inventory & Operations</span></div>
+          <div class="doc-row"><div class="doc-icon"><i class="fa fa-file-pdf"></i></div><div><div class="doc-name">Stock Audit Report — March 2026</div><div class="doc-meta">Uploaded 3 weeks ago &nbsp;·&nbsp; PDF &nbsp;·&nbsp; 412 KB</div></div><div class="doc-dl" onclick="showToast('File downloaded')"><i class="fa fa-download"></i></div></div>
+          <div class="doc-row"><div class="doc-icon"><i class="fa fa-file-excel"></i></div><div><div class="doc-name">Purchase Orders — Q4 2025–26</div><div class="doc-meta">Uploaded 1 month ago &nbsp;·&nbsp; Excel &nbsp;·&nbsp; 156 KB</div></div><div class="doc-dl" onclick="showToast('File downloaded')"><i class="fa fa-download"></i></div></div>
+          <div class="doc-row"><div class="doc-icon"><i class="fa fa-file-pdf"></i></div><div><div class="doc-name">Delivery Records — April 2026</div><div class="doc-meta">Uploaded 1 week ago &nbsp;·&nbsp; PDF &nbsp;·&nbsp; 220 KB</div></div><div class="doc-dl" onclick="showToast('File downloaded')"><i class="fa fa-download"></i></div></div>
+          <div class="doc-row"><div class="doc-icon"><i class="fa fa-file-pdf"></i></div><div><div class="doc-name">Goods Received Notes — Apr 2026</div><div class="doc-meta">Uploaded 5 days ago &nbsp;·&nbsp; PDF &nbsp;·&nbsp; 175 KB</div></div><div class="doc-dl" onclick="showToast('File downloaded')"><i class="fa fa-download"></i></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PAYROLL ── -->
+    <div id="page-payroll" class="page">
+      <div class="page-title-row">
+        <div><div class="page-title">Payroll</div><div class="page-subtitle">Staff salaries and payment records</div></div>
+        <button class="page-action-btn" onclick="showToast('Payroll processed for May 2026')"><i class="fa fa-check"></i> &nbsp;Process Payroll</button>
+      </div>
+
+      <div class="payroll-summary">
+        <div class="metric-card"><div class="metric-label">Total Staff</div><div class="metric-value">12</div><div class="metric-sub">Full time employees</div></div>
+        <div class="metric-card"><div class="metric-label">Monthly Payroll</div><div class="metric-value">₹3.6L</div><div class="metric-sub">May 2026</div></div>
+        <div class="metric-card"><div class="metric-label">Paid This Month</div><div class="metric-value" style="color:var(--green)">10</div><div class="metric-sub">2 pending processing</div></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header"><span class="panel-title">Staff Payroll — May 2026</span></div>
+        <table class="data-table">
+          <thead><tr><th>Employee</th><th>Role</th><th>Basic Salary</th><th>Allowances</th><th>Deductions</th><th>Net Pay</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td class="name-cell">Rajesh Kumar</td><td>Sales Manager</td><td>₹45,000</td><td>₹5,000</td><td>₹4,500</td><td class="amount-cell">₹45,500</td><td><span class="badge badge-paid">Paid</span></td></tr>
+            <tr><td class="name-cell">Priya Sharma</td><td>Accountant</td><td>₹38,000</td><td>₹3,000</td><td>₹3,800</td><td class="amount-cell">₹37,200</td><td><span class="badge badge-paid">Paid</span></td></tr>
+            <tr><td class="name-cell">Amit Verma</td><td>Warehouse Staff</td><td>₹22,000</td><td>₹2,000</td><td>₹2,200</td><td class="amount-cell">₹21,800</td><td><span class="badge badge-paid">Paid</span></td></tr>
+            <tr><td class="name-cell">Sunita Devi</td><td>Office Assistant</td><td>₹18,000</td><td>₹1,500</td><td>₹1,800</td><td class="amount-cell">₹17,700</td><td><span class="badge badge-paid">Paid</span></td></tr>
+            <tr><td class="name-cell">Vikram Singh</td><td>Delivery Driver</td><td>₹20,000</td><td>₹3,000</td><td>₹2,000</td><td class="amount-cell">₹21,000</td><td><span class="badge badge-pending">Pending</span></td></tr>
+            <tr><td class="name-cell">Meena Patel</td><td>Sales Executive</td><td>₹28,000</td><td>₹4,000</td><td>₹2,800</td><td class="amount-cell">₹29,200</td><td><span class="badge badge-pending">Pending</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── CLIENTS ── -->
+    <div id="page-clients" class="page">
+      <div class="page-title-row">
+        <div><div class="page-title">Client Directory</div><div class="page-subtitle">Business contacts and account details</div></div>
+        <button class="page-action-btn" onclick="openModal('modal-client')"><i class="fa fa-plus"></i> &nbsp;Add Client</button>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header"><span class="panel-title">All Clients (31)</span></div>
+        <table class="data-table">
+          <thead><tr><th>Client Name</th><th>Contact Person</th><th>City</th><th>Phone</th><th>Total Business</th><th>Last Invoice</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td class="name-cell">Sharma Traders</td><td>Ramesh Sharma</td><td>Mumbai</td><td>98XX XXX XXX</td><td class="amount-cell">₹4.2L</td><td>01 May 2026</td><td><span class="badge badge-ok">Active</span></td></tr>
+            <tr><td class="name-cell">Mehta & Sons</td><td>Dinesh Mehta</td><td>Ahmedabad</td><td>97XX XXX XXX</td><td class="amount-cell">₹8.9L</td><td>28 Apr 2026</td><td><span class="badge badge-ok">Active</span></td></tr>
+            <tr><td class="name-cell">Agarwal Distributors</td><td>Sunil Agarwal</td><td>Delhi</td><td>99XX XXX XXX</td><td class="amount-cell">₹6.7L</td><td>01 Apr 2026</td><td><span class="badge badge-overdue">Overdue</span></td></tr>
+            <tr><td class="name-cell">Gupta Enterprises</td><td>Manoj Gupta</td><td>Jaipur</td><td>96XX XXX XXX</td><td class="amount-cell">₹3.1L</td><td>20 Apr 2026</td><td><span class="badge badge-ok">Active</span></td></tr>
+            <tr><td class="name-cell">Joshi & Brothers</td><td>Arvind Joshi</td><td>Pune</td><td>98XX XXX XXX</td><td class="amount-cell">₹5.5L</td><td>18 Apr 2026</td><td><span class="badge badge-ok">Active</span></td></tr>
+            <tr><td class="name-cell">Patel Wholesale</td><td>Bhavesh Patel</td><td>Surat</td><td>94XX XXX XXX</td><td class="amount-cell">₹7.2L</td><td>15 Apr 2026</td><td><span class="badge badge-pending">Pending</span></td></tr>
+            <tr><td class="name-cell">Singh Distributors</td><td>Harjeet Singh</td><td>Chandigarh</td><td>98XX XXX XXX</td><td class="amount-cell">₹2.8L</td><td>10 Apr 2026</td><td><span class="badge badge-ok">Active</span></td></tr>
+            <tr><td class="name-cell">Verma Trading Co.</td><td>Alok Verma</td><td>Lucknow</td><td>97XX XXX XXX</td><td class="amount-cell">₹4.1L</td><td>05 Apr 2026</td><td><span class="badge badge-ok">Active</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── SETTINGS ── -->
+    <div id="page-settings" class="page">
+      <div class="page-title-row">
+        <div><div class="page-title">Settings</div><div class="page-subtitle">Portal configuration and user management</div></div>
+      </div>
+
+      <div class="two-col">
+        <div class="panel">
+          <div class="panel-header"><span class="panel-title">Change Password</span></div>
+          <div class="app-form">
+            <div class="form-row full"><label>Current Password</label><input type="password" placeholder="••••••••"></div>
+            <div class="form-row full"><label>New Password</label><input type="password" placeholder="••••••••"></div>
+            <div class="form-row full"><label>Confirm New Password</label><input type="password" placeholder="••••••••"></div>
+            <button class="submit-btn" onclick="showToast('Password updated successfully')">Update Password</button>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-header"><span class="panel-title">Portal Users</span></div>
+          <table class="data-table">
+            <thead><tr><th>Username</th><th>Role</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td class="name-cell">admin</td><td>Administrator</td><td><span class="badge badge-ok">Active</span></td></tr>
+              <tr><td class="name-cell">accountant</td><td>Accounts</td><td><span class="badge badge-ok">Active</span></td></tr>
+              <tr><td class="name-cell">manager</td><td>Manager</td><td><span class="badge badge-ok">Active</span></td></tr>
+              <tr><td class="name-cell">viewer1</td><td>View Only</td><td><span class="badge badge-pending">Inactive</span></td></tr>
+            </tbody>
+          </table>
+          <div style="padding:14px 16px">
+            <button class="submit-btn" onclick="showToast('New user invite sent')"><i class="fa fa-plus"></i> &nbsp;Add User</button>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-header"><span class="panel-title">Agency Details</span></div>
+          <div class="app-form">
+            <div class="form-row full"><label>Agency Name</label><input type="text" value="Neelkanth Sales Agency"></div>
+            <div class="form-row"><label>GSTIN</label><input type="text" placeholder="27XXXXX0000X1ZX"></div>
+            <div class="form-row"><label>PAN</label><input type="text" placeholder="XXXXX0000X"></div>
+            <div class="form-row full"><label>Registered Address</label><input type="text" placeholder="Full address"></div>
+            <button class="submit-btn" onclick="showToast('Agency details saved')">Save Details</button>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-header"><span class="panel-title">Data Backup</span></div>
+          <div style="padding:20px;">
+            <p style="font-size:13px; color:var(--text-muted); margin-bottom:16px; font-family:'Cormorant Garamond',serif; font-size:15px;">Last backup: <span style="color:var(--gold)">Today, 09:00 AM</span></p>
+            <div style="display:flex; flex-direction:column; gap:10px;">
+              <button class="submit-btn" onclick="showToast('Backup created successfully')"><i class="fa fa-database"></i> &nbsp;Create Backup Now</button>
+              <button class="submit-btn" onclick="showToast('Backup downloaded')"><i class="fa fa-download"></i> &nbsp;Download Last Backup</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end app-body -->
+
+  <div class="gold-line"></div>
+  <div class="app-footer">
+    <div class="footer-text">Neelkanth Sales Agency &nbsp;·&nbsp; Confidential Internal Portal</div>
+    <div class="footer-text">© 2026 &nbsp;·&nbsp; All Rights Reserved</div>
+  </div>
+</div><!-- end app -->
+
+<!-- ── MODALS ── -->
+<div class="modal-overlay" id="modal-invoice">
+  <div class="modal-box">
+    <div class="gold-line"></div>
+    <div class="modal-header"><span class="modal-title">Create New Invoice</span><button class="modal-close" onclick="closeModal('modal-invoice')">✕</button></div>
+    <div class="app-form">
+      <div class="form-row"><label>Client Name</label><select><option>Sharma Traders</option><option>Mehta & Sons</option><option>Gupta Enterprises</option><option>Joshi & Brothers</option></select></div>
+      <div class="form-row"><label>Invoice Date</label><input type="date"></div>
+      <div class="form-row"><label>Due Date</label><input type="date"></div>
+      <div class="form-row"><label>Amount (₹)</label><input type="number" placeholder="0.00"></div>
+      <div class="form-row full"><label>Description</label><input type="text" placeholder="Invoice description"></div>
+      <button class="submit-btn" onclick="closeModal('modal-invoice');showToast('Invoice created successfully')">Create Invoice</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-stock">
+  <div class="modal-box">
+    <div class="gold-line"></div>
+    <div class="modal-header"><span class="modal-title">Add Product to Inventory</span><button class="modal-close" onclick="closeModal('modal-stock')">✕</button></div>
+    <div class="app-form">
+      <div class="form-row"><label>Product Name</label><input type="text" placeholder="Enter product name"></div>
+      <div class="form-row"><label>SKU Code</label><input type="text" placeholder="SKU-XXX"></div>
+      <div class="form-row"><label>Category</label><select><option>Category 1</option><option>Category 2</option><option>Category 3</option><option>Category 4</option></select></div>
+      <div class="form-row"><label>Initial Stock (units)</label><input type="number" placeholder="0"></div>
+      <div class="form-row"><label>Unit Price (₹)</label><input type="number" placeholder="0.00"></div>
+      <div class="form-row"><label>Reorder Level</label><input type="number" placeholder="Minimum stock before alert"></div>
+      <button class="submit-btn" onclick="closeModal('modal-stock');showToast('Product added to inventory')">Add Product</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-upload">
+  <div class="modal-box">
+    <div class="gold-line"></div>
+    <div class="modal-header"><span class="modal-title">Upload Document</span><button class="modal-close" onclick="closeModal('modal-upload')">✕</button></div>
+    <div class="app-form">
+      <div class="form-row full"><label>Document Name</label><input type="text" placeholder="e.g. P&L Report May 2026"></div>
+      <div class="form-row"><label>Category</label><select><option>Financial Reports</option><option>Inventory & Operations</option><option>GST & Tax</option><option>Payroll</option><option>Legal</option></select></div>
+      <div class="form-row"><label>Date</label><input type="date"></div>
+      <div class="form-row full"><label>Select File</label><input type="file"></div>
+      <button class="submit-btn" onclick="closeModal('modal-upload');showToast('Document uploaded successfully')">Upload Document</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-client">
+  <div class="modal-box">
+    <div class="gold-line"></div>
+    <div class="modal-header"><span class="modal-title">Add New Client</span><button class="modal-close" onclick="closeModal('modal-client')">✕</button></div>
+    <div class="app-form">
+      <div class="form-row full"><label>Company / Client Name</label><input type="text" placeholder="Enter company name"></div>
+      <div class="form-row"><label>Contact Person</label><input type="text" placeholder="Name"></div>
+      <div class="form-row"><label>Phone</label><input type="tel" placeholder="Mobile number"></div>
+      <div class="form-row"><label>City</label><input type="text" placeholder="City"></div>
+      <div class="form-row"><label>GSTIN</label><input type="text" placeholder="GST number (optional)"></div>
+      <div class="form-row"><label>Email</label><input type="email" placeholder="email@example.com"></div>
+      <button class="submit-btn" onclick="closeModal('modal-client');showToast('Client added successfully')">Add Client</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="success-toast" id="toast"><i class="fa fa-check-circle"></i> &nbsp;<span id="toast-msg"></span></div>
+
+<script>
+  // ── USERS (add more here) ──
+  const USERS = {
+    'admin':      'neelkanth2024',
+    'accountant': 'accounts123',
+    'manager':    'manager456'
+  };
+
+  function doLogin() {
+    const u = document.getElementById('username').value.trim();
+    const p = document.getElementById('password').value;
+    if (USERS[u] && USERS[u] === p) {
+      document.getElementById('login-page').style.display = 'none';
+      document.getElementById('app').style.display = 'flex';
+      document.getElementById('logged-user').textContent = u;
+    } else {
+      document.getElementById('login-error').style.display = 'block';
+    }
+  }
+
+  function doLogout() {
+    document.getElementById('login-page').style.display = 'flex';
+    document.getElementById('app').style.display = 'none';
+    document.getElementById('username').value = '';
+    document.getElementById('password').value = '';
+    document.getElementById('login-error').style.display = 'none';
+  }
+
+  function showPage(id, el) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('page-' + id).classList.add('active');
+    if (el) el.classList.add('active');
+  }
+
+  function openModal(id) { document.getElementById(id).classList.add('open'); }
+  function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+  document.querySelectorAll('.modal-overlay').forEach(m => {
+    m.addEventListener('click', function(e) { if (e.target === this) this.classList.remove('open'); });
+  });
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    document.getElementById('toast-msg').textContent = msg;
+    t.style.display = 'block';
+    setTimeout(() => { t.style.display = 'none'; }, 3000);
+  }
+</script>
+</body>
+</html>
